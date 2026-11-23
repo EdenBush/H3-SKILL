@@ -16,7 +16,7 @@ description: H3 提示词的轻量版单文件手册。一个文件跑完一镜�
 | 形态 | 输入 | 走哪 |
 |---|---|---|
 | **单条** | 用户手上有图，只要这一条 | 本文件全部内容 |
-| **剧集** | 一集 6–12 个 10 秒单元，逐个生成再拼 | 本文件 + 第七节（开工四步）+ 第六节（一集节奏） |
+| **剧集** | 一集 6–12 个 10 秒单元，逐个生成再拼 | 本文件 + 第七节（开工四步 + 组装）+ 第六节（一集节奏） |
 
 判错的典型症状：写到第三个单元时发现脸对不上、空间对不上，而前两个单元的生成成本已经付掉了。
 
@@ -961,7 +961,7 @@ ends above the waist, so no floor, no stage edge and no furniture appear anywher
 
 ---
 
-## 七、每单元开工四步
+## 七、每单元开工四步（组装见第三节）
 
 ### 第 0 步：填状态卡
 
@@ -1348,7 +1348,7 @@ non_diegetic_music: N/A
 
 这份文件是**结论集**。更细的内容分两处：本技能自带的两个深度文件，和重型版 `h3-scene-prompt-director`。
 
-### 本技能自带的（`skills/H3/references/`）
+### 本技能自带的（`h3-ref2va-acting-director/references/`）
 
 | 你要做 | 去哪 |
 |---|---|
@@ -1365,7 +1365,7 @@ non_diegetic_music: N/A
 | 写角色/场景的出图提示词，或核对出图结果 | `asset-production.md` |
 | 算槽位数量、决定撤哪张、多图防混淆 | `slot-economy.md` |
 | 查一个词的准确定义（单元 / 镜头 / 锚点 / 机位 / 景别……） | `glossary.md` |
-| 完整的状态卡模板、读图七项、开工四步 | `shot-intake.md` |
+| 完整的状态卡模板、读图七项、开工五步（含组装） | `shot-intake.md` |
 | 钩子六型、揭示节奏、收尾手法的完整版 | `episode-rhythm.md` |
 | 更多情绪 → 物理动作的映射（约 25 条，本文只收了 12 条） | `performance-physics.md` |
 | 六层生理的时间轴错位编法 | `physiology.md` |

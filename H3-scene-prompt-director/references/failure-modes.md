@@ -38,11 +38,11 @@
 
 | 现象 | 病因 | 修法 |
 |---|---|---|
-| 三条腿 | 非人特征（尾巴）被算进肢体计数 | `remains one single tail with two flukes, separate from her two legs` + `exactly two legs` |
-| 手指黏连 / 六指 / 少指 | 手部交握类姿势没有具体约束 | `ten fingers laced` + 指定拇指位置（`thumbs meeting just below the tip`） |
+| 三条腿 | 非人特征（尾巴）被算进肢体计数 | 写清非人特征的起点、数量与空间排他：`one single tail with two flukes, growing from the base of her spine and hanging clear of her body`。不写肢体数量 |
+| 手指黏连 / 六指 / 少指 | 手部交握类姿势没有具体约束 | 写接触点、关节状态与承重：`their hands are clasped, the thumbs resting over the top, the knuckles pale where they press`；仍崩就收窄景别或换种子 |
 | 前景的手位置漂移或消失 | 只在第一镜提了一次 | 每一镜各提一次，并写 `only a forearm and the fingers visible` |
 | 蝴蝶坐姿塌成跪坐 / 一条腿折叠 | 只写了 `spread wide`，没约束承重点 | `both knees bent and dropped wide out to either side` + `weight on her shins` |
-| 脚掌只出一只 / 脚趾数不清 | 双脚类构图没有明确约束 | `both soles planted flat on the sheet with the soles facing the lens` + `ten toes distinct` |
+| 脚掌只出一只 / 脚趾数不清 | 双脚类构图没有明确约束 | 写两只脚的落点与承重：`both soles planted flat on the sheet, the arches lifted, the weight on the heels`；脚趾细节靠景别与焦点，不靠计数 |
 | 丝袜被画成裸腿 + 一层黑影 | 只写了"穿丝袜"，没有边界和形变 | `scalloped lace tops` + `the fabric bunches at the knees` + `the lace tops rolled slightly upward` |
 | 姿势在切镜后变了 | 一致性锁只写了 `keep the pose` | 写成关节状态：`knees stay dropped wide ... her weight on her shins` |
 
@@ -119,8 +119,8 @@
 │   ├─ 特征缺失 → 逐段重申 + 一致性锁
 │   └─ 风格混 → 跨风格三件套
 ├─ 肢体不对
-│   ├─ 多腿 → 非人特征的排他式并列
-│   ├─ 手错 → ten fingers + 拇指位置
+│   ├─ 多腿 → 非人特征的起点 + 数量 + 空间排他
+│   ├─ 手错 → 接触点 + 拇指位置 + 承重
 │   └─ 丝袜变皮肤 → 蕾丝边 + 织物形变
 ├─ 表演不对
 │   ├─ 不动 → 补时间码骨架
