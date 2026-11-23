@@ -47,8 +47,11 @@
 |---|---|---|
 | [Paul Ekman：Facial Action Coding System (FACS)](https://www.paulekman.com/facial-action-coding-system/) 及 [PMC 解剖分类研究](https://pmc.ncbi.nlm.nih.gov/articles/PMC3008166/) | 面部表情由 46 个独立动作单元（AUs）及 A–E 五级强度构成；AU10（上唇提肌）、AU11（鼻唇沟加深肌）、AU12（颧大肌）的强收缩直接加深鼻唇沟（法令纹）；真笑（Duchenne smile）依赖眼轮匝肌（AU6）与极轻口角联动而非单纯拉扯嘴角 | **阻断法令纹与防用力过猛**：真人特写把中下脸强度锁在 Trace/Slight 级；通过抑制中下脸的剧烈拉扯，从解剖学根源消除 AI 动态深法令纹，将大部分情绪交给眼睑微张力、视线焦点与呼吸。**这些编码只在内部使用，正文严禁出现 `FACS` / `AU` 字样** |
 | [ARRI Alexa 35 REVEAL Color Science & Textures](https://www.arri.com/resource/blob/277388/bf133c4a8673934c385a8afbb830acf4/2024-01-arri-textures-data.pdf) | 院线数字摄影机通过极宽动态范围、对数高光柔和压缩滚降（smooth highlight roll-off）与去饱和暗部颗粒，实现宽容、温润且不油腻的自然肤色还原 | **去油腻、去高对比高饱和**：提示词强制锁定 `smooth logarithmic highlight roll-off`、`natural matte skin finish with zero oily sheen`、`soft low-to-medium filmic contrast` 与 `restrained desaturated cinema color palette` |
+| 用户提供的第三方提示词教程「AI-PanSir」Bilibili 精选成功案例截图集（36 张，2026-11 收录；本技能未保存原视频链接） | 以「情绪词 + `micro expressions`」收窄表演幅度；同一镜内按部位与先后顺序写微动作；台词前后各留半拍（准备 / 余韵）；用 `almost forms X and then relaxes` 表达动作"差一点"收回；反打反应镜逐镜更换复合锚定词 | **微表情锚定词与台词三段关系（全档通用）**：`acting-performance.md`「微表情锚定词」采用"幅度锚 + 部位顺序 + 台词前准备 / 台词后余韵"；教程中的 `<pause>` 标签不进入本技能输出规范，停顿改写为正文或时间码 |
 
 **验证边界**：本轮针对"腮红过重、说话 / 表情转为真人观感、真人档四大伪影"的修订，未提供可供逐帧查看的成片。底色 / 妆容 / 受光分离、普通对白局部锚、四拍微表情链是本技能据此制定的修正策略，不能把失败归因于单个词，也不能宣称已经过视频生成对照验证。
+
+第三方 36 张「成功案例」截图是对外展示样片与配套提示词，不是逐帧对照实验，也没有附带可复核的失败样本；本技能只采用其中与既有规则兼容的写法（幅度锚、部位顺序、台词三段、"差一点"、反打换锚），并把 `<pause>` 等非 H3 规范标签排除在外。**`micro expressions` 锚定词只能视为有成功案例展示支持的导演规则，不等于已在本技能成片上验证。**
 
 ---
 

@@ -223,7 +223,7 @@ MJ 指 Midjourney 的光影审美参考，不是统一的灯光配方。有指�
 
 真人说话时采用日常交谈式的松弛口型（natural conversational articulation with relaxed jaw and minimal mouth opening），不张大嘴夸张咬字，不牵拉鼻翼两侧法令纹，发音间隙保留真实的微呼吸、吞咽与视线转移。
 
-**真人档的表演层**（多拍微表情、泪水的三种物理状态、拒绝直视的决绝链）见 `acting-performance.md`。档位锁肤质与光影，表演锁微动作，两件事分开验收。
+**真人档的表演层**（`micro expressions` 幅度锚、多拍微表情、泪水的三种物理状态、拒绝直视的决绝链）见 `acting-performance.md`。档位锁肤质与光影，表演锁微动作，两件事分开验收。
 
 ---
 

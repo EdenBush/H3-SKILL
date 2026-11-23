@@ -60,6 +60,8 @@
 | 事后戏看起来像还在兴奋 | 走了上升型弧型 | 全部反转为衰减方向，见 `physiology.md` 的反向对照表 |
 | 生气看起来像喘 | 呼吸转深了 | 全程写 `fast and shallow`，绝不出现 `long exhale` |
 | 情绪像贴上去的 | 用了不可拍摄的形容（很伤心、很生气） | 换成可拍摄的物理事件，见 `physiology.md` 反例库 |
+| 情绪只有标签 | 只写了 `sad` / `angry`，模型给一张标准表情脸 | 情绪词后加 `micro expressions`，再接一条可见动作链：`a quietly hurt micro expression — her eyes drop, her lips part and close again, and she swallows once` |
+| 说完台词立刻"断电" | 台词窗口一结束表情归零，像演员下班 | 台词前留半拍准备，台词后留半拍余韵：`Her eyes remain on him after the line`；收尾用"差一点"：`one corner of her mouth almost forms a polite smile and then relaxes` |
 | 画面几乎不变，像静帧 | 生理层没有时间码骨架 | 补 TIMELINE，一拍一件事 |
 
 ---

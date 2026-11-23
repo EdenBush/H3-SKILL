@@ -12,6 +12,88 @@
 - H3 模式、字段、素材标签、声源和输出仍由 `h3-output-spec.md` 与 `delivery.md` 负责。把表演写入对应事件处，不追加另一套提示词包、审阅关卡或视频生成步骤。
 
 
+## 微表情锚定词：`micro expressions`（全档通用）
+
+在情绪词后面挂 `micro expressions`，是把整张脸的表演收窄成**克制、细小、可读的面部变化**的最短手段。`sad micro expressions` 不是"更弱的悲伤"，而是"悲伤只从眼神、唇线和呼吸里漏出来"。它不替代本文件的三区控制与多拍链，只负责先定幅度；具体内容仍要按部位与顺序写。
+
+实战只有两步：**① 情绪词后加 `micro expressions`；② 按部位与顺序写一条可见动作链，并在台词前后各留半拍。** 下面拆开讲。
+
+### 最小句式：情绪词 + 锚定词 + 一个可见动作
+
+只写 `sad` / `angry` 会得到标签式的标准表情；只加锚定词不写动作，会得到一张幅度正确但内容空泛的脸。有效写法是三段：
+
+```text
+a quietly hurt micro expression — her eyes drop, her lips part and close again, and she swallows once
+a guarded yet aching micro expression, one corner of her mouth almost forming a polite smile before it relaxes
+a nervous and earnest micro expression as his fingers tighten on the strap
+```
+
+### 复合情绪词：用第二个词限定走向
+
+复合锚定词比单一情绪更难演错方向。可直接取用：
+
+| 复合锚定词 | 演的是什么 |
+|---|---|
+| `restrained polite micro expressions` | 礼貌在表面，情绪压在里面 |
+| `guarded yet aching micro expressions` | 有防备，但底下在疼 |
+| `quiet fond micro expressions` | 不外露的温柔 |
+| `breaking but restrained micro expressions` | 快绷不住，还在绷 |
+| `held-back micro expressions` | 全部往回收 |
+| `quietly hurt micro expressions` | 被刺到但不发作 |
+| `shocked and conflicted micro expressions` | 震惊与矛盾同时存在 |
+| `nervous and earnest micro expressions` | 紧张但真诚 |
+| `shy and touched micro expressions` | 害羞又被触动 |
+| `disbelieving but relieved micro expressions` | 不敢信，又松了口气 |
+| `furious and heartbroken micro expressions` | 怒火底下是心碎 |
+| `hollow and numb micro expressions` | 空掉、麻掉 |
+| `desperate and pleading micro expressions` | 绝望地求 |
+| `shaken and awakening micro expressions` | 被撼动后回神 |
+
+两个情绪并列时，后一个词是前一个词的底子或走向；不写 `complex emotions` 这类不可拍摄的概括。
+
+### 部位与顺序：微在幅度，不微在省略
+
+写清**哪个部位、做什么、先后顺序**。一条链只承担一个意思，链上每一步仍服从 `performance-physics.md` 的一拍 1–2 部位与全场单一外显点：
+
+- 看着对方 → 短暂垂眼 → 双唇微启又合上 → 抬眼 → 说台词
+- `she holds his gaze, looks down briefly, lets her lips part and closes them again; after a short hesitation she says: <d>[English] ...</d>`
+
+顺序本身就是表演：先垂眼再低头是退让，先低头再抬眼是憋着。同一组动作换序会变成另一种情绪，也不要把全部部位塞进同一拍。
+
+### 台词三段关系：台词前准备、台词中气口、台词后余韵
+
+- **台词前**：留半拍准备——视线落定或躲开、一次吸气、唇启欲言，避免一开口就抢台词；
+- **台词中**：台词拆成两段时，在两段之间的 0.3–0.8 秒气口插入一个动作（一次吞咽、下眼睑收紧、呼吸断半拍），不打断单句发音，也不借机加入身体动作；
+- **台词后**：留半拍余韵——`Her eyes remain on him after the line`、唇角收回、呼气；不说完立刻"断电"。
+
+完整模板：`She holds his gaze, looks down briefly, lets her lips part and closes them again. After a short hesitation, she says: <d>[English] ...</d> Her eyes remain on him after the line.`
+
+**不要照搬教程里的 `<pause>` 标签。** H3 输出规范只定义 `<d>`、语言标签与说话人编号；停顿写进正文（`a short hesitation` / `a 0.3-second pause`）或落在时间码里。
+
+### 「差一点」装置：almost…then relaxes
+
+克制感来自动作差一点发生又收回，而不是没有动作：
+
+- `one corner of her mouth almost forms a polite smile and then relaxes`
+- `her lips part as if to speak, then close again`
+- `his hand starts to lift toward her, then settles back at his side`
+
+对应 `acting-library.md` 的 M073（欲言又止）与 M074（克制笑意）。同一条链只安排一次"差一点"，反复用会显得犹豫成性。
+
+### 反打反应镜：每切一镜换一个锚定词
+
+两人对切时，给反应方一个新的复合锚定词，让情绪沿切点单向演进（`furious and heartbroken` → `hollow and numb` → `desperate and pleading` → `shaken and awakening`），不把同一条表情复制两遍。切点仍按 `continuity-ledger.md` 继承前一镜末态；同框多人的反应分工见 `performance-physics.md`「这条的边界：不是"一帧只能一个人动"」。
+
+### 边界：什么时候不用
+
+- 远景、全景、背影读不出脸：改用头肩、呼吸与手部，锚定词只挤占注意力；
+- 纯动作交锋：只在命中、受击、胜负已分的反应段使用；
+- 用户要夸张、喜剧化或卡通化表演：锚定词会把幅度拉回写实，遵从用户与当前档位；
+- 默认 3DCG 档：可用，但 FF7RE 式 CG 表演允许剧情需要的大幅表情；锚定词只用于需要收窄的镜头，不把全片统一压成写实微表情；
+- 三渲二实机建模档：可以用，但不以"微"牺牲该档应有的表情表现力与非面部表演；
+- 锚定词不解除任何既有约束：一拍仍 1–2 个部位、全场一个外显点、3–4 拍微表情节拍与 TIMELINE 时间码节拍仍是两套计数（见下文「克制 ≠ 少写微表情」）。
+
+
 ## 真人电影档核心铁律：面部肌肉分区控制与「克制 ≠ 面瘫」多拍微表情法则
 
 在真人电影档（及高精度近景文戏）中，摄影机镜头具有极强的心理放大效应。AI 视频生成最常见的两个极端错误是：**要么“五官乱飞、用力过猛（Overacting）并拉出刀刻般深法令纹”，要么为了防法令纹而“把脸锁成毫无微表情变化的木讷面瘫（Under-Specified Blank Face）”**。
@@ -70,4 +152,4 @@
 
 ## 仅对采用本模块的片段检查
 
-检查触发事件与反应的先后；关键近景是否具备 3–4 个细腻演进节拍而非单薄的一句概括；边说边哭是否写清了气口落泪与平滑面颊的双重锁定；不耐烦/回避方是否严格执行了拒绝直视；跨镜泪痕是否继承；正文中是否已彻底清除 `FACS` / `AU` 缩写代码。
+检查触发事件与反应的先后；情绪是否只有标签或只有锚定词而缺一个可见动作链；台词前是否有半拍准备、台词后是否有半拍余韵；关键近景是否具备 3–4 个细腻演进节拍而非单薄的一句概括；边说边哭是否写清了气口落泪与平滑面颊的双重锁定；不耐烦/回避方是否严格执行了拒绝直视；跨镜泪痕是否继承；正文中是否已彻底清除 `FACS` / `AU` 缩写代码。
