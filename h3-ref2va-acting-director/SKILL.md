@@ -1,6 +1,6 @@
 ---
 name: h3-ref2va-acting-director
-description: H3 提示词的轻量版单文件手册。一个文件跑完一镜，也能跑一集：六个硬机制、参考图五类角色、六段外壳+七段骨架、情绪到物理动作的速查、镜头七条硬约束、一集节奏、每单元开工四步。当用户要写 H3 提示词、设计分镜、或做多单元短剧时使用；细节不足时转到 h3-scene-prompt-director。
+description: H3 提示词的轻量版单文件手册。一个文件跑完一镜，也能跑一集：六个硬机制、参考图五类角色、六段外壳+七段骨架、微表情锚定词与部位顺序、情绪到物理动作的速查、镜头七条硬约束、一集节奏、每单元开工四步。当用户要写 H3 提示词、设计分镜、或做多单元短剧时使用；细节不足时转到 h3-scene-prompt-director。
 ---
 
 # H3 轻量版：一个文件跑完一镜，也能跑一集
@@ -326,7 +326,7 @@ exactly two legs, no distortion, keep the body proportions correct.
 
 **二、单个角色的脸，一拍只让 1–2 个部位明显变化。** 其余用"保持不变"锚住。同一秒里眉毛、眼睛、嘴角、下巴一起动，是 AI 人脸显假的第一原因。
 
-> **注意这条只管"一张脸的部位"，不管"一帧里有几个人能动"。** 三个人同时有反应是好事，而且往往是画面变真的关键——见 4.9。把这条读成"一帧只能一个人动"，是这套文档最容易被误读的地方。
+> **注意这条只管"一张脸的部位"，不管"一帧里有几个人能动"。** 三个人同时有反应是好事，而且往往是画面变真的关键——见 4.10。把这条读成"一帧只能一个人动"，是这套文档最容易被误读的地方。
 
 **三、强度封顶：全场只有一个最外显的点。** 情绪越强越要写"忍住"。脑子真正过载的人不会五官齐飞，他会**冻结**。
 
@@ -342,6 +342,56 @@ exactly two legs, no distortion, keep the body proportions correct.
 | `like a wounded animal` | 模型会真的画一只动物 | 写身体：`her shoulders curling forward` |
 | `she realizes` / `he understands` | 内心动词 | 写身体的变化顺序 |
 | `more intense` / `softer than before` | 跨条时"before"不存在 | 改成绝对描述 |
+
+### 4.1b 微表情两招：锚定词收幅度，部位顺序定演法
+
+**只写情绪词，幅度就交给了模型。** `quiet sadness` 到底是面无表情、默默流泪，还是痛哭？范围太宽，演法全靠采样运气。成片里有效的补法是两层叠加，顺序不能反：
+
+```text
+第一层  情绪词 + micro expressions        → 定幅度：微小、克制、只在脸的上半部
+第二层  部位 + 方向 + 幅度 + 回收 + 顺序   → 定演法：哪个部位先动、动到哪、收不收
+```
+
+**这不推翻 4.1 第一条**：情绪词仍然不承担演法，它只决定"哪一类 + 幅度上限"，具体演法全部由部位顺序给出。
+
+#### 第一招：情绪词后面加 `micro expressions`
+
+| 写法 | 得到什么 |
+|---|---|
+| `sad` | 范围失控：面无表情、沉默、痛哭都可能 |
+| `sad micro expressions` | 淡淡的悲伤：眼底、面部肌肉、嘴角的微小变化 |
+| `frustrated micro expressions` | 压抑着、不爆发的挫败感 |
+| `flirty micro expressions` | 直视镜头时的微妙俏皮感 |
+
+这条也是 1.5 的正向写法：想表达"别哭太狠"，不写 `no big crying`，写 `sad micro expressions`。但它是**幅度声明，不是省事的替代品**——后面不接部位顺序，模型仍然自由发挥，只是把范围收窄了一档。
+
+**复合情绪用两个词拼，前一层是壳，后一层是漏出来的东西**：`guarded yet aching`（表面若无其事，底下发酸）、`restrained polite`（克制礼貌）、`shocked and conflicted`（震惊且挣扎）、`hollow and numb`（空洞麻木）、`furious and heartbroken`（怒极而心碎）、`shaken and awakening`（震动后回神）、`breaking but restrained`（克制正在碎）。可复用组合共 14 条，见 `references/performance-enhancement.md` 第五节。
+
+#### 第二招：明确部位动作 + 先后顺序
+
+写完锚定词，紧接着回答四个问题：
+
+```text
+动的是眼睛还是嘴？→ 往哪里动？→ 幅度多大？→ 最后收不收得回来？
+```
+
+然后写死顺序——动作和台词谁先谁后。停顿写进正文，不写标签：
+
+```text
+At 00:06.500, the camera cuts to a close-up of the wife. She holds his gaze, looks down
+briefly, lets her lips part and closes them again. After a short hesitation, she says:
+<d>[Chinese] 我等你。</d> Her eyes remain on him after the line.
+```
+
+停顿有三种落法：句前 `After a short hesitation, she says:`；句中把台词拆成两个 `<d>`，中间插一个动作（`she takes a short breath, then:`）；或者直接把停顿落在时间码的拍点上。**不要引入 `<pause>` 这类规范外的标签**——H3 的输出规范只定义 `<d>`、语言标签和说话人编号。
+
+一个 6 秒近景里藏了五拍：**稳视线 → 低头半拍（情绪转折）→ 唇张又闭（欲言又止）→ 犹豫后开口 → 说完视线不回撤**。每一拍只动一个部位大类，台词窗口前后都留了动作，口型不会和表情打架。
+
+**"回收"是最常漏的一项。** 只写"她张嘴想说"不写"又闭上"，模型会让她一直张着嘴。`closes them again`、`then relaxes`、`then softens`、`eyes remain on him`——每个动作都要交代收在哪。
+
+**最后一句 `Her eyes remain on him after the line` 不要省。** 台词说完脸就回到中性，是表演在切点上"泄气"，也是最常见的廉价感来源。让它停在最后一个动作上。
+
+**强情绪同样靠这一套**：愤怒就用 `furious and heartbroken micro expressions`，同时把身体锁住（`keeping his gun steady`、指节发白、颈筋绷起）——**外显给身体，脸只出微表情**，比五官齐飞可信得多。多镜的情绪弧线（假笑崩塌、麻木→唤醒、含羞→破防等五种分层模式）和五条 15 秒成片案例，见 `references/performance-enhancement.md`。
 
 ### 4.2 情绪是叠加的，不是切换的
 
@@ -424,8 +474,14 @@ left hand planted on the desk  +  torso pushed left  +  right shoulder taut  +  
 | **尴尬** | 手臂被搂住时往外撑一下又停 + 背绷直 + 膝并拢 | — |
 | **松一口气** | 肩膀塌 5 厘米 + 胸腔垮下去 + 一次无声长呼气 | 这个"塌"是喜剧的节拍点 |
 | **睡着** | 眼皮完全闭合、睫毛线贴皮肤、眼球不动、鼻息能吹动发丝 | 睁眼躺着盯镜头 = 恐怖谷 |
+| **克制礼貌（社交假笑）** | 单侧嘴角微扬又收回 + 下颌收紧 + 抿唇 + 垂眼 | 先扬后收，不是一直保持 |
+| **麻木 / 空洞** | 眨眼变慢 + 嘴唇微张无声 + 视线涣散不聚焦 | 后接"回焦"时，眼神先聚、身体后动 |
+| **含羞应允** | 睫毛下垂 + 嘴角抖着半笑 + 轻到几乎无声 | 半笑是抖的，不是稳的 |
+| **惊喜破防** | 眉毛瞬间松开 + 笑出声 + 身体前倾 | 眉先松，笑后到 |
+| **绝望哀求** | 眉心一垮 + 颈筋绷起 + 声音沙哑挤出来 | 眉先塌，声音后碎 |
+| **被唤醒** | 下眼睑轻颤 + 瞳孔猛然回焦 + 下颌咬紧 | 眼神先聚，下颌最后锁 |
 
-> 这里收了 12 条做速查。完整映射约 25 条（分六组：清醒 / 紧张 / 决断 / 病态 / 尴尬喜剧 / 睡着），见 `h3-scene-prompt-director/references/performance-physics.md`。
+> 这里收了 18 条做速查，后 6 条来自 15 秒成片案例，逐镜拆解见 `references/performance-enhancement.md`。完整映射约 25 条（分六组：清醒 / 紧张 / 决断 / 病态 / 尴尬喜剧 / 睡着），见 `h3-scene-prompt-director/references/performance-physics.md`。
 
 ### 4.7 喜剧与压迫，两种反向演法
 
@@ -441,6 +497,8 @@ left hand planted on the desk  +  torso pushed left  +  right shoulder taut  +  
 | 气息 | `breathy` / `cracked` / `hoarse` / `tight` | **破音放第一个字**是崩溃的物理证据；放句尾像演完再补 |
 | 语速 | `unhurried` / `trailing` / `rushed` | 慢 = 有掌控，快 = 在泄漏 |
 | 尾音 | `the last syllable dropping` / `rising` | 落下 = 陈述，上扬 = 求 |
+
+**停顿不写标签，写正文或时间码**：句前用 `After a short hesitation, she says:`；句中要停，把台词拆成两个 `<d>`，中间插一个动作（`she takes a short breath, then:`）；也可以直接把停顿落在时间码的拍点上。教程里常见的 `<pause>` 不属于 H3 输出规范，不要照抄。
 
 #### 台词不是打字，是剪辑
 
@@ -1099,6 +1157,8 @@ ends above the waist, so no floor, no stage edge and no furniture appear anywher
 [ ] 成片锚点写了 copy zero of its framing and zero of its camera position
 [ ] 时间码首尾相接、累加等于时长、末拍有余量
 [ ] 台词都能在一次性呼吸内说完，窗口内镜头静止
+[ ] 每段有情绪转折的镜头都有锚定词或等效的幅度声明，后面跟了部位动作
+[ ] 动作和台词谁先谁后写死了，停顿写在正文或时间码里，台词后有尾帧停留
 [ ] 每一拍只有一个新事件，没有两个部位同时大变
 [ ] 最外显的表演只出现一次
 [ ] 没有残留的否定式表述
@@ -1346,7 +1406,7 @@ non_diegetic_music: N/A
 
 ## 十二、更细的东西在哪
 
-这份文件是**结论集**。更细的内容分两处：本技能自带的两个深度文件，和重型版 `h3-scene-prompt-director`。
+这份文件是**结论集**。更细的内容分两处：本技能自带的三个深度文件，和重型版 `h3-scene-prompt-director`。
 
 ### 本技能自带的（`h3-ref2va-acting-director/references/`）
 
@@ -1354,8 +1414,9 @@ non_diegetic_music: N/A
 |---|---|
 | **视频参考的完整规范**（复刻态/重建态对照表、四条硬写法、两个隐藏地雷、四级保留枚举） | `references/ref2va-video-reference.md` |
 | **动作迁移的完整流程**（16 节：入口判定、六项确认、Beat Sheet、分段接续、尾帧接力、重试策略、降级路线） | `references/motion-transfer-workflow.md` |
+| **表演增强**（micro expressions 锚定词、部位顺序四问、14 条复合情绪词库、五条 15 秒成片案例、情绪弧线五种分层、表演专项失败模式） | `references/performance-enhancement.md` |
 
-这两份是**本技能的权威版**，不是镜像。视频参考和动作迁移这两个主题，读它们就够，不需要再去重型版。
+这三份是**本技能的权威版**，不是镜像。视频参考、动作迁移和表演增强这三个主题，读它们就够，不需要再去重型版。
 
 ### 重型版里的（`h3-scene-prompt-director/references/`）
 
@@ -1382,3 +1443,5 @@ non_diegetic_music: N/A
 H3 不执行"演得悲伤一点"。它执行的是**一次喉结吞咽、一次下眼睑对抗、一次视线离开不到半秒又看回去**。
 
 你的全部工作，是在承认"每次生成都是无状态的、硬切有信息预算、多主体有身份混合风险、中文口型有长度纪律"这些前提下，把这些生理事件按秒排进六段式字段里，并保证**声音、口型、视线方向和跨单元身份描述逐字节一致**。
+
+情绪词只负责"哪一类、多大"；**"用哪里、按什么顺序、收在哪"，才是你要写的东西。**
