@@ -217,7 +217,7 @@ height, looking back toward the desk.
 
 不写这句，模型会默认退回参考图的视角——因为参考图是它手上唯一的空间信息，你不指定，它就用那个。
 
-#### retention 等级：场景图必须是 `weak_reference`
+#### retention 等级：走 Ref2VA 六段壳时，场景图必须是 `weak_reference`
 
 这是实测出来的硬结论，比声明句还关键：
 

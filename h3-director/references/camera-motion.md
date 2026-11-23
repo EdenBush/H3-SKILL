@@ -126,7 +126,7 @@ At 00:09.500 机位已后移拉远至末帧，末帧为 <Subject 1> 从头顶到
 焦距自始至终锁定在同一档位。
 ```
 **坑**：**全身镜不宜作拉远的首帧，可作尾帧**（所以这个镜头是"中景起、全身收"，不是反过来）。
-**另一坑**：场景图如果给了 `fully_preserved`，镜头会被持续拉回场景图的构图——场景一律 `weak_reference`（这是 Ref2VA 壳的字段；三字段壳里不写这个字段，改用一句正文声明，见 `slot-economy.md` 0.7）。
+**另一坑**：场景图会把它的机位一起带进来，推拉时镜头被持续拉回它的构图。按三维地图处理（见 `slot-economy.md` 0.7）：声明 `the scene image supplies the room as a three-dimensional space only; the camera position for this shot comes entirely from the CAMERA section below`，再用一句话把机位钉在房间的具体位置。
 
 ### 4.4 横移（向左）
 

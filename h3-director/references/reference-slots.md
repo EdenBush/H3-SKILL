@@ -163,11 +163,11 @@ eyes with white highlights.
 Her single large whale tail is tucked under her right hip and curves out to the right across the
 sheet, both flukes clearly visible.
 ...
-the whale tail stays under her right hip and remains one single tail with two flukes, separate
-from her two legs.
+the whale tail stays under her right hip and remains one single tail with two flukes, clearly
+separate from her legs.
 ```
 
-三件都要有：**位置**（在哪）、**数量**（一条、两片尾鳍）、**排他**（与双腿分开）。
+三件都要有：**位置**（在哪）、**数量**（一条、两片尾鳍）、**排他**（与腿分开）。**"数量"只数非人部件，不写肢体数量。**
 
 只写"她有鲸尾"不够——模型不知道这条尾巴占据的是"额外的位置"还是"腿的位置"。
 

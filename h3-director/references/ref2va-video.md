@@ -2,7 +2,7 @@
 
 > **镜像文件。** 权威版在 `H3`（h3-ref2va-acting-director）技能的 `references/ref2va-video-reference.md`。这份是给"图片路径技能"顺带查阅用的同源副本，**改动必须两边同步**。
 
-参考视频模式的提示词，本质是在回答一个问题：**`<Video N>` 到底"拥有"这条生成视频的哪一部分时间结构？** 把答案写进 `fully_preserved`，把你不想要它拥有的部分逐项放进 `strictly_avoided`，再用 `<Picture N>` 锁定它不该触碰的身份。
+参考视频模式的提示词，本质是在回答一个问题：**`<Video N>` 到底"拥有"这条生成视频的哪一部分时间结构？** 把答案写进保留级别（编舞、运镜类参考通常是 `partially_preserved`；只有整份都要时才用 `fully_preserved`），把你不想要它拥有的部分逐项放进 `strictly_avoided`，再用 `<Picture N>` 锁定它不该触碰的身份。
 
 **视频参考比图片参考更强，也更容易"吃掉"其他素材。职责越窄，迁移越准。**
 
@@ -229,7 +229,7 @@ non_diegetic_music: 配乐，不要也写 N/A
 
 | 症状 | 病因 | 修法 |
 |---|---|---|
-| 动作僵硬 / 漂移 | `<Video 1>` 职责写得太模糊（"参考动作"），模型在多个时间点平均采样 | 拆成可枚举的事件序列，每个事件一个短句，写进 `fully_preserved` |
+| 动作僵硬 / 漂移 | `<Video 1>` 职责写得太模糊（"参考动作"），模型在多个时间点平均采样 | 拆成可枚举的事件序列，每个事件一个短句，写进 `partially_preserved`（只保留事件序列，不含人脸、服装、背景） |
 | 面部身份被视频覆盖 | Picture 与 Video 都含人脸，没声明优先级 | 显式互斥：`<Video 1> does not provide facial identity`，`retention_analysis` 里把 `<Picture 1>` 列为身份唯一来源 |
 | 运镜被意外继承 | 只想要动作，镜头却跟着参考视频动 | `strictly_avoided` 逐项列 `camera path` / `camera movement speed` / `shot framing`，并在 `detailed_description` 里写出想要的机位（或固定机位） |
 | 整体节奏拖慢 / 加快 | 剪辑节奏被继承，但目标动作不需要那个速度 | 只保留动作事件顺序，把 `timing` 放进 `attribute_transfer` 并写出目标速度 |
