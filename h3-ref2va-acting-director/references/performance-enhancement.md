@@ -225,7 +225,7 @@ spotlights orbit them kissing until final frame.
 
 | 镜 | 锚定词 | 部位顺序 | 台词 |
 |---|---|---|---|
-| Shot 1 | — | 抓手腕 → 犹豫，双人景先建立关系 | — |
+| Shot 1 | — | 设计支点腕 → 犹豫，双人景先建立关系 | — |
 | Shot 2 | `nervous and earnest` | 吞咽一次 → 抿紧嘴唇 → 第一句 → 一次短吸气 → 第二句 | "Hey... I don't want tonight to end." / "Be with me?" |
 | Shot 3 | `shy and touched` | 睫毛下垂 → 嘴角抖着半笑 → 轻声 | "Yes." |
 | Shot 4 | `disbelieving but relieved` | 眉毛瞬间松开 → 笑出 → 前倾拥抱 | — |
