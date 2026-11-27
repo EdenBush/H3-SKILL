@@ -1,5 +1,7 @@
 # 空间控场：三层空间协议与跨单元锚定
 
+**链上位置**：接戏核，把关系翻译成"谁在哪、谁怎么动、谁被什么挡住"；交给表演和镜头。它只维护四个不变量：身份 / 拓扑 / 人数 / 轴线。
+
 **这份文件的定位**：本文件是 h3-director 的**空间层计算底层**，以 `h3-ref2va-acting-director/references/spatial-anchoring.md` 为准。它把 `text-anchoring.md` 的地标句 / 场面调度图 / 五锁，和 `continuity-ledger.md` 的世界关系 / 逐镜初末态，升级成一张可计算的账本：N# 节点、P# 锚区、K# 机位点、c# 槽位、轴线表、四检。
 
 **它不新增输出字段。** 交付仍是 `CHARACTER → POSE AND STAGING → TIMELINE → CAMERA → PHYSIOLOGY PRIORITY → LIGHT AND ATMOSPHERE → CONSISTENCY LOCK`；账本只决定这些段落里的事实怎么写。地标句 / 调度图 / 五锁仍是交付用的 prose，账本是生成它们的内部表。下面的 `World:` / `Slots:` / `Shot:` 是**写作顺序**，不是 H3 新字段。

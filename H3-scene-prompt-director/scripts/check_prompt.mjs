@@ -234,11 +234,11 @@ function checkShotCuts(text) {
   const hasDialogue = /<d>/.test(text);
 
   if (hasDialogue) {
-    if (shotCount > 3) {
+    if (shotCount > 4) {
       results.push({
         id: "shots:density",
         level: "warn",
-        message: `有台词的单元用了 ${shotCount} 镜。台词窗口需要镜头静止，切太碎口型必漂，建议 1–2 镜`,
+        message: `有台词的单元用了 ${shotCount} 镜。默认 2–4 镜，不设硬上限；超过 4 镜时每一刀必须换权力/信息/立场，台词窗口保持静止。若只是同一件事多切几刀，合并`,
       });
     }
   } else if (/first-person|POV|viewer.s own (right )?hand/i.test(text)) {
@@ -253,13 +253,13 @@ function checkShotCuts(text) {
       results.push({
         id: "shots:density",
         level: "warn",
-        message: `无台词的单元只有 ${shotCount} 镜，10 秒会拖沓（没有对白提供节奏，就靠切镜）。建议 3–4 镜`,
+        message: `无台词的单元只有 ${shotCount} 镜，10 秒会拖沓（没有对白提供节奏，就靠切镜）。建议 3–5 镜`,
       });
-    } else if (shotCount > 5) {
+    } else if (shotCount > 7) {
       results.push({
         id: "shots:density",
         level: "warn",
-        message: `无台词单元用了 ${shotCount} 镜，切得太碎（每镜不到 2 秒），建议 3–4 镜`,
+        message: `无台词单元用了 ${shotCount} 镜；默认 3–5，设计版 5–7。超过 7 镜每镜必须有独立新信息，否则会切成碎片`,
       });
     }
   }
