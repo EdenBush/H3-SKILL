@@ -215,6 +215,8 @@ H3 不执行形容词，它执行具体的物理状态。所以有一类词写�
 
 **通用原则**：正文里始终保留 `CHARACTER / POSE AND STAGING / TIMELINE / CAMERA / PHYSIOLOGY PRIORITY / LIGHT AND ATMOSPHERE / CONSISTENCY LOCK` 这套全大写分节。即使目标模型不支持字段语法，这套分节也能显著提升模型对段落的识别率——它相当于给模型一个免费的目录。
 
+**`POSE AND STAGING` 内部按三层写**（2026 升级）：`World:`（L1 节点表，逐字复用）→ `Slots:`（L2 席位/朝向/承重/道具）→ `Shot:`（L3 机位/景深/前景/帧内人数）。屏幕侧只在本镜投影出现一次；`retention_analysis` / 状态卡如引用不改值。L1/L2/L3 与账本的完整定义见 `spatial-anchoring.md` §二。
+
 ---
 
 ## 八、检查清单

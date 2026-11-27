@@ -7,10 +7,14 @@
  *   node scripts/check_prompt.mjs prompt.txt --duration 10
  *   node scripts/check_prompt.mjs --stdin < prompt.txt
  *   node scripts/check_prompt.mjs prompt.txt --json
+ *   node scripts/check_prompt.mjs unit1.txt unit2.txt unit3.txt --series
+ *
+ * --series：多个单元一起过闸，并逐条比对"系列常量块"（CHARACTER 段，
+ * 或 Ref2VA 壳的 subject_definitions 段）是否整块重写、是否被逐条缩写。
  *
  * 退出码：0 全部通过（可有警告），1 存在失败项
  *
- * 机械检查只覆盖可判定的部分（段落完整性、时间码连续性、标记语法、计数声明、FACS 泄漏）。
+ * 机械检查只覆盖可判定的部分（段落完整性、时间码连续性、标记语法、计数声明、FACS 泄漏、常量块长度）。
  * 下面三项必须人工过：一拍是否只推一件事、生理层是否错开、有没有不可拍摄的形容。
  */
 
@@ -34,17 +38,19 @@ const TIMECODE_RE = /(\d{1,2}\.\d{1,2})\s*-\s*(\d{1,2}\.\d{1,2})\s*s\s*:/g;
 const SHOT_RE = /\[Shot\s+(\d+)\]/g;
 
 function parseArgs(argv) {
-  const opts = { file: null, stdin: false, duration: 10, json: false };
+  const opts = { files: [], stdin: false, duration: 10, json: false, series: false };
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
     if (a === "--stdin") opts.stdin = true;
     else if (a === "--json") opts.json = true;
+    else if (a === "--series") opts.series = true;
     else if (a === "--duration") {
       const v = Number(argv[i + 1]);
       if (Number.isFinite(v) && v > 0) opts.duration = v;
       i += 1;
-    } else if (!a.startsWith("--")) opts.file = a;
+    } else if (!a.startsWith("--")) opts.files.push(a);
   }
+  opts.file = opts.files[0] ?? null;
   return opts;
 }
 
@@ -325,6 +331,7 @@ const BENIGN_NEGATIVES = [
   /no additional/gi,
   /no more than/gi,
   /no music/gi,
+  /no live-action/gi,
 ];
 
 function checkNegativePhrasing(text) {
@@ -465,13 +472,282 @@ function checkFacsLeakage(text) {
   return results;
 }
 
-function run() {
-  const opts = parseArgs(process.argv.slice(2));
-  const text = readInput(opts);
+// 系列常量块：剧集里每个单元都必须整块重写同一段不变量（风格锁 + 地标句 + 调度图 + 参考映射 + 主体定义）。
+// 第 1 单元写全、第 3 单元少两项、第 5 单元只剩一个名字——这是剧集里最隐蔽的一种漂移。
+// 三字段壳取 CHARACTER 段；六段壳取 subject_definitions + detailed_description 里的 setting 句。
+// 六段壳的 summary 与 retention_analysis 是每单元都会变的内容，不是常量，必须排除。
+function isSixPartShell(text) {
+  return /subject_definitions\s*:/i.test(text);
+}
 
-  const results = [
+function extractSettingSentence(text) {
+  for (const line of text.split(/\r?\n/)) {
+    const i = line.search(/The setting is/i);
+    if (i !== -1) return line.slice(i).trim();
+  }
+  return null;
+}
+
+function extractConstantBlock(text) {
+  const sixStart = text.search(/subject_definitions\s*:/i);
+  if (sixStart !== -1) {
+    const after = text.slice(sixStart);
+    const end = after.slice(20).search(/\n\s*(summary|retention_analysis|detailed_description)\s*:/i);
+    const defs = (end === -1 ? after : after.slice(0, 20 + end)).trim();
+    const setting = extractSettingSentence(text);
+    return setting ? `${defs}\n${setting}` : defs;
+  }
+  const charStart = text.search(/^\s*CHARACTER\s*:/im);
+  if (charStart === -1) return null;
+  const after = text.slice(charStart);
+  const next = after.slice(10).search(/\n\s*[A-Z][A-Z ]{4,}\s*:/);
+  return next === -1 ? after : after.slice(0, 10 + next);
+}
+
+function normalizeBlock(s) {
+  return s.replace(/\s+/g, " ").trim();
+}
+
+function blockWords(block) {
+  return normalizeBlock(block)
+    .toLowerCase()
+    .replace(/[.,;:!?"'()\[\]<>]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+// 词频差集：只回答"基线里有哪些词在这一条里没有/多了"，用于人工判断是状态词还是缩写
+const DIFF_STOPWORDS = new Set(
+  "a an the and or of in on at to with for her his their its is are was were as by from that this these those it she he they".split(" ")
+);
+
+function wordDiff(baseWords, curWords) {
+  const counts = (arr) => {
+    const m = new Map();
+    for (const w of arr) m.set(w, (m.get(w) || 0) + 1);
+    return m;
+  };
+  const b = counts(baseWords);
+  const c = counts(curWords);
+  const removed = [];
+  const added = [];
+  for (const [w, n] of b) {
+    const d = n - (c.get(w) || 0);
+    if (d > 0) for (let i = 0; i < d; i += 1) removed.push(w);
+  }
+  for (const [w, n] of c) {
+    const d = n - (b.get(w) || 0);
+    if (d > 0) for (let i = 0; i < d; i += 1) added.push(w);
+  }
+  return { removed, added };
+}
+
+// 常量块里出现"持有 / 开合 / 在手上"这类会变的描述，是"逐字一致但一致地过时"的入口：
+// 单元 1 的 `the mug travels in her hand` 被原样带到单元 2，就会和"缸在桌上"打架。
+const STATE_IN_BLOCK = [
+  /\btravels? in (?:her|his|their) hand\b/gi,
+  /\b(?:holds?|holding|carries|carrying)\b/gi,
+  /\bin (?:her|his|their) (?:right |left )?hand\b/gi,
+  /\blid (?:clipped|snapped|open|closed)\b/gi,
+  /\bclasp (?:closed|open|snapped)\b/gi,
+];
+
+function checkStateInConstantBlock(norm) {
+  const groups = new Map();
+  for (const u of norm) {
+    const matches = new Set();
+    for (const re of STATE_IN_BLOCK) {
+      for (const m of u.norm.matchAll(re)) matches.add(m[0].toLowerCase());
+    }
+    if (matches.size === 0) continue;
+    if (!groups.has(u.norm)) groups.set(u.norm, { names: [], matches: new Set() });
+    const g = groups.get(u.norm);
+    g.names.push(u.name);
+    for (const m of matches) g.matches.add(m);
+  }
+  return [...groups.values()].map((g) => ({
+    id: "series:stateinblock",
+    level: "warn",
+    message: `${g.names.join(" / ")} 的常量块含持有 / 开合描述（${[...g.matches].slice(0, 6).join(", ")}）。若它在本集里会变，搬到 POSE AND STAGING 与 CONSISTENCY LOCK；否则会"逐字一致但一致地过时"`,
+  }));
+}
+
+function checkSeriesConstantBlock(units) {
+  const results = [];
+  const withBlocks = units.map((u) => ({ ...u, block: extractConstantBlock(u.text) }));
+
+  const missing = withBlocks.filter((u) => !u.block);
+  if (missing.length > 0) {
+    results.push({
+      id: "series:missing",
+      level: "fail",
+      message: `${missing.map((u) => u.name).join(" / ")} 找不到常量块（三字段壳的 CHARACTER 段，或 Ref2VA 壳的 subject_definitions 段）。剧集每个单元都要整块重写`,
+    });
+    return results;
+  }
+
+  const norm = withBlocks.map((u) => ({
+    name: u.name,
+    norm: normalizeBlock(u.block),
+    words: blockWords(u.block),
+  }));
+  // 基线取最长的那条：通常是最完整的一条。若最长的那条也是缩写的，长度比这一关会全部通过，需人工再看一眼
+  const base = norm.reduce((a, b) => (b.words.length > a.words.length ? b : a));
+  results.push({
+    id: "series:baseline",
+    level: "pass",
+    message: `常量块基线取 ${base.name}（${base.words.length} 词）`,
+  });
+
+  let allIdentical = true;
+  for (const u of norm) {
+    if (u.norm !== base.norm) allIdentical = false;
+    const ratio = u.words.length / Math.max(1, base.words.length);
+    const { removed, added } = wordDiff(base.words, u.words);
+    const diffSet = [...new Set([...removed, ...added])];
+    const interesting = diffSet.filter((w) => !DIFF_STOPWORDS.has(w) && w.length > 1);
+    const sample = (interesting.length > 0 ? interesting : diffSet).slice(0, 10);
+    const diffRatio = (removed.length + added.length) / Math.max(1, base.words.length);
+
+    if (ratio < 0.85) {
+      results.push({
+        id: `series:short:${u.name}`,
+        level: "fail",
+        message: `${u.name} 常量块只有基线的 ${Math.round(ratio * 100)}%（${u.words.length} / ${base.words.length} 词），疑似逐条缩写。从规格卡整块复制，只改状态词`,
+      });
+    } else if (diffRatio > 0.03) {
+      results.push({
+        id: `series:rewrite:${u.name}`,
+        level: "warn",
+        message: `${u.name} 与基线差 ${Math.round(diffRatio * 100)}%（缺 ${removed.length} 词 / 多 ${added.length} 词）：${sample.join(", ")}。确认这些差异是状态词，不是被改写或删掉的描述`,
+      });
+    } else if (u.norm === base.norm) {
+      results.push({
+        id: `series:same:${u.name}`,
+        level: "pass",
+        message: `${u.name} 常量块与基线逐字一致`,
+      });
+    } else {
+      results.push({
+        id: `series:stateword:${u.name}`,
+        level: "pass",
+        message: `${u.name} 与基线仅差 ${diffSet.length} 词（${sample.slice(0, 8).join(", ")}），按状态词处理`,
+      });
+    }
+  }
+
+  if (allIdentical) {
+    results.push({
+      id: "series:identical",
+      level: "pass",
+      message: `${norm.length} 个单元的常量块逐字一致`,
+    });
+  }
+
+  results.push(...checkStateInConstantBlock(norm));
+
+  return results;
+}
+
+// 入画清单核对（六段壳）：retention_analysis 声明每个 Subject 出现在哪几镜，
+// 正文 detailed_description 里实际出现的是哪几镜。两边对不上，就是"谁凭空消失/凭空出现"。
+function checkRetentionParticipation(units) {
+  const results = [];
+  for (const u of units) {
+    if (!isSixPartShell(u.text)) continue;
+
+    const retIdx = u.text.search(/retention_analysis\s*:/i);
+    if (retIdx === -1) {
+      results.push({
+        id: `series:retention:${u.name}`,
+        level: "warn",
+        message: `${u.name} 六段壳缺少 retention_analysis，无法核对入画清单`,
+      });
+      continue;
+    }
+    let ret = u.text.slice(retIdx);
+    const retEnd = ret.slice(18).search(/\n\s*detailed_description\s*:/i);
+    if (retEnd !== -1) ret = ret.slice(0, 18 + retEnd);
+
+    const detIdx = u.text.search(/detailed_description\s*:/i);
+    if (detIdx === -1) continue;
+    let det = u.text.slice(detIdx);
+    const detEnd = det.slice(20).search(/\n\s*(overall_soundscape|non_diegetic_music)\s*:/i);
+    if (detEnd !== -1) det = det.slice(0, 20 + detEnd);
+
+    // `<Subject 4> is the ...` 是环境主体（场景本身），按全镜在场处理，不参与逐镜核对
+    const envSubjects = new Set();
+    for (const line of u.text.split(/\r?\n/)) {
+      const m = line.match(/<Subject\s+(\d+)>\s+is\s+the\b/i);
+      if (m) envSubjects.add(Number(m[1]));
+    }
+
+    const actual = new Map();
+    for (const part of det.split(/(?=\[Shot\s+\d+\])/)) {
+      const m = part.match(/\[Shot\s+(\d+)\]/);
+      if (!m) continue;
+      const shotNo = Number(m[1]);
+      // `<Subject 2>'s perch / voice` 是画外指代，不算入画
+      const subs = new Set([...part.matchAll(/<Subject\s+(\d+)>(?!['’]s\b)/g)].map((x) => Number(x[1])));
+      for (const s of subs) {
+        if (!actual.has(s)) actual.set(s, new Set());
+        actual.get(s).add(shotNo);
+      }
+    }
+
+    const fmt = (set) =>
+      set.size === 0 ? "不入画" : `镜 ${[...set].sort((a, b) => a - b).join("、")}`;
+
+    for (const line of ret.split(/\r?\n/)) {
+      const m = line.match(/<Subject\s+(\d+)>\s*\(([^)]*)\)/);
+      if (!m) continue;
+      const sub = Number(m[1]);
+      if (envSubjects.has(sub)) {
+        results.push({
+          id: `series:participation:${u.name}:${sub}`,
+          level: "pass",
+          message: `${u.name} <Subject ${sub}> 是环境主体，按全镜在场处理（不参与逐镜核对）`,
+        });
+        continue;
+      }
+      const stated = new Set([...m[2].matchAll(/\[Shot\s+(\d+)\]/g)].map((x) => Number(x[1])));
+      const seen = actual.get(sub) || new Set();
+      const missing = [...stated].filter((s) => !seen.has(s));
+      const extra = [...seen].filter((s) => !stated.has(s));
+      if (missing.length === 0 && extra.length === 0) {
+        results.push({
+          id: `series:participation:${u.name}:${sub}`,
+          level: "pass",
+          message: `${u.name} <Subject ${sub}> 入画清单与正文一致（${fmt(stated)}）`,
+        });
+      } else {
+        results.push({
+          id: `series:participation:${u.name}:${sub}`,
+          level: "warn",
+          message: `${u.name} <Subject ${sub}> 入画清单与正文不一致：声明 ${fmt(stated)}，正文实际 ${fmt(seen)}。改清单或补写 / 删去该角色`,
+        });
+      }
+    }
+  }
+  return results;
+}
+
+function runUnitChecks(text, duration) {
+  if (!isSixPartShell(text)) return runChecks(text, duration);
+  // 六段壳没有七段的段落名与行内时间码，三字段那套检查不适用
+  return [
+    { id: "shell:six", level: "pass", message: "六段壳（Ref2VA）：三字段段落 / 时间码检查跳过" },
+    ...checkSlotDeclaration(text),
+    ...checkFacsLeakage(text),
+    ...checkNegativePhrasing(text),
+    ...checkCrossShotReference(text),
+  ];
+}
+
+function runChecks(text, duration) {
+  return [
     ...checkSections(text),
-    ...checkTimeline(text, opts.duration),
+    ...checkTimeline(text, duration),
     ...checkDialogue(text),
     ...checkShotCuts(text),
     ...checkCameraConflict(text),
@@ -481,17 +757,83 @@ function run() {
     ...checkNegativePhrasing(text),
     ...checkCrossShotReference(text),
   ];
+}
 
-  const fails = results.filter((r) => r.level === "fail");
-  const warns = results.filter((r) => r.level === "warn");
-  const passes = results.filter((r) => r.level === "pass");
+function summarize(results) {
+  return {
+    fails: results.filter((r) => r.level === "fail"),
+    warns: results.filter((r) => r.level === "warn"),
+    passes: results.filter((r) => r.level === "pass"),
+  };
+}
+
+function printResults(results) {
+  for (const r of results.filter((x) => x.level === "pass")) console.log(`  ok   ${r.message}`);
+  for (const r of results.filter((x) => x.level === "warn")) console.log(`  warn ${r.message}`);
+  for (const r of results.filter((x) => x.level === "fail")) console.log(`  FAIL ${r.message}`);
+}
+
+function runSeries(opts) {
+  if (opts.files.length < 2) {
+    console.error("--series 需要至少两个单元文件：node check_prompt.mjs unit1.txt unit2.txt [unit3.txt ...] --series");
+    process.exit(2);
+  }
+
+  const units = opts.files.map((name) => ({ name, text: readFileSync(name, "utf8") }));
+  const perUnit = units.map((u) => ({ name: u.name, results: runUnitChecks(u.text, opts.duration) }));
+  const seriesResults = [...checkSeriesConstantBlock(units), ...checkRetentionParticipation(units)];
+
+  const all = [...perUnit.flatMap((u) => u.results), ...seriesResults];
+  const { fails, warns, passes } = summarize(all);
+
+  if (opts.json) {
+    console.log(
+      JSON.stringify(
+        {
+          duration: opts.duration,
+          series: true,
+          units: perUnit.map((u) => ({ name: u.name, ...summarize(u.results), ok: summarize(u.results).fails.length === 0 })),
+          seriesResults,
+          fails,
+          warns,
+          passes,
+          ok: fails.length === 0,
+        },
+        null,
+        2
+      )
+    );
+    process.exit(fails.length === 0 ? 0 : 1);
+  }
+
+  for (const u of perUnit) {
+    console.log(`\n=== ${u.name} ===`);
+    printResults(u.results);
+  }
+  console.log("\n=== 系列常量块（跨单元） ===");
+  printResults(seriesResults);
+  console.log("");
+  console.log(`通过 ${passes.length} / 警告 ${warns.length} / 失败 ${fails.length}`);
+  console.log("机械检查之外仍需人工确认：常量块里的差异是否只是状态词、一拍只推一件事、生理层彼此错开、没有不可拍摄的形容。");
+  process.exit(fails.length === 0 ? 0 : 1);
+}
+
+function run() {
+  const opts = parseArgs(process.argv.slice(2));
+
+  if (opts.series) {
+    runSeries(opts);
+    return;
+  }
+
+  const text = readInput(opts);
+  const results = runChecks(text, opts.duration);
+  const { fails, warns, passes } = summarize(results);
 
   if (opts.json) {
     console.log(JSON.stringify({ duration: opts.duration, fails, warns, passes, ok: fails.length === 0 }, null, 2));
   } else {
-    for (const r of passes) console.log(`  ok   ${r.message}`);
-    for (const r of warns) console.log(`  warn ${r.message}`);
-    for (const r of fails) console.log(`  FAIL ${r.message}`);
+    printResults(results);
     console.log("");
     console.log(`通过 ${passes.length} / 警告 ${warns.length} / 失败 ${fails.length}`);
     console.log("机械检查之外仍需人工确认：一拍只推一件事、生理层彼此错开、没有不可拍摄的形容。");

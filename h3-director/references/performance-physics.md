@@ -279,6 +279,8 @@ a low, pressed, quietly commanding voice                               → 她�
 
 **长台词是被听过去的，短台词是被记住的。**
 
+**话轮与失语**：抢话、叠话、插不进、沉默、失败启动、三股力量见 `dialogue-performance.md`；本文件只给台词参数与剪辑原则。
+
 ---
 
 ## 六、把这张表用起来的三步

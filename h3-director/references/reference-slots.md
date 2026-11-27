@@ -45,6 +45,18 @@ Image 2 is a multi-view character design sheet: use the character design only, r
 
 关键词是 `render exactly one single figure`——这是唯一能压住多视图复制的表述。
 
+### 模板 B2：四视图角色卡——上下分工（剧集推荐）
+
+多视图设定图最稳的用法不是"整张取角色设计"，而是**把图拆成两半派活**：
+
+```
+Image 1 is a four-view character sheet. Use only the upper facial close-up as the exclusive source of her facial identity across all angles, speech and expressions. Use the bottom front, right-side and back full-body views only for body proportions and costume details, without copying their static standing pose or their flat camera-facing orientation. Render exactly one single figure; ignore the sheet layout, the plain background and the studio lighting.
+```
+
+两句缺一不可：`only the upper facial close-up` 管脸，`only for body proportions and costume details` 管衣服与比例；`without copying their static standing pose` 是三视图最大的污染源——不写，立正站姿会被抄进每一镜，而且每个单元抄得不一样。
+
+剧集里这条随**系列常量块**每单元整块重写（`text-anchoring.md` §2.8）：它属于"主体定义"那一件，不是槽位声明的一次性备注。
+
 ### 模板 C：没有姿势参考（设定图直接放在第 2 槽）
 
 ```
@@ -208,6 +220,7 @@ no other figures, no mannequins, no reference sheet borders
 - [ ] 每张参考图是否都有独立的声明行？
 - [ ] 每行是否都写了 `take only X` 和 `ignore Y`（两个都要）？
 - [ ] 多视图设定图是否加了 `render exactly one single figure`？
+- [ ] 四视图角色卡是否按模板 B2 拆开派活（上半脸管身份、下半身只管比例与服装、不取站姿）？
 - [ ] 空的槽位是否显式声明了 unused？
 - [ ] 跨风格时，三件套是否都到位（槽位排除渲染 / 镜头首句定风格 / 细节复述风格）？
 - [ ] 素材媒介是否与当前视觉档位一致？跨档素材是否只取了姿态/结构并排除了渲染？

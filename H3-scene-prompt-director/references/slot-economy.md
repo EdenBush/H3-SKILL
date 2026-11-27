@@ -44,6 +44,8 @@
 
 由此得到那张五类角色表。**分类的依据是"它回答哪个问题"，不是"它看起来像什么"。**
 
+**可选：站位图。** 它不新增第六类角色，是空间账本/调度图的图像版。占一个槽位，只给"家具节点 + 人物平面站位 + 可走区域"，声明 `supplies the top-down layout only; copy zero of its lighting, materials, rendering style and camera angle`。有图时替代多张人物站位参考图；不提供脸、服装、材质或光。它与 `spatial-anchoring.md` 的 N#/P# 同源。
+
 ---
 
 ### 0.1 为什么必须先做这一步
