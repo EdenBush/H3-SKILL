@@ -1,6 +1,6 @@
 # 10 秒场景骨架
 
-四个可直接改的骨架。**改之前先读完对应的"使用说明"，骨架不是万能模板，每个都对应一种弧型。**
+七个可直接改的骨架。**改之前先读完对应的"使用说明"，骨架不是万能模板，每个都对应一种弧型。**
 
 占位符统一写作 `{{NAME}}`，替换时整个替换（含大括号），不要保留。
 
@@ -28,7 +28,7 @@
 
 **使用说明**：适合情绪推进、正戏。**单镜 POV，不切镜**，靠三段时间推进；每段承载一个生理层的进入。转折点（急吸）固定在 4.8 秒。
 
-**骨架 A 的固定动作偏亲密戏**：写其他题材时整句替换动作与生理细节，只保留它的时间码结构和"一拍只推一件事"的递进逻辑，不要留下原句。
+**骨架 A 的固定动作偏亲密戏**：写其他题材时整句替换动作与生理细节，只保留它的时间码结构和"一拍只推一个主变化"的递进逻辑，不要留下原句。
 
 ```
 {{SLOT_DECL}}
@@ -239,6 +239,44 @@ non_diegetic_music: {{MUSIC}}
 8. 768P 出片验证，骨架对了再升 2K
 ```
 
+## 骨架 G：叙事场（10 秒 / 非 POV / 5–7 镜）
+
+**使用说明**：三人以内、有对话/接触/权力变化的叙事场。**先按 `camera.md` 二b 第 7 条列镜头表**，再填；POV/亲密戏用 A–D。结构可对照 `H3-scene-prompt-director` 技能的 `golden-example.md`，但风格锁用本档位原文。
+
+```text
+{{SLOT_DECL}}
+
+integrated_multimodal_description:
+[Shot 1] {{STYLE_LOCK}}. {{WORLD}}. {{A}} and {{B}} at {{POSITIONS}}. {{HEIGHT_ANGLE}}, {{LENS}}, {{SHOT_SIZE}}, {{FOREGROUND}}, focus {{FOCUS}}. {{BEAT_1}}.
+[Shot 2] At 00:0X.000, the camera cuts to {{HEIGHT_ANGLE_2}}, {{LENS_2}}, {{SHOT_SIZE_2}}, {{FOREGROUND_2}}: {{BEAT_2}}.
+[Shot 3] At 00:0X.000, the camera cuts to {{HEIGHT_ANGLE_3}}, {{LENS_3}}, {{SHOT_SIZE_3}}, {{FOREGROUND_3}}: {{BEAT_3}}.
+[Shot 4] At 00:0X.000, the camera cuts to {{HEIGHT_ANGLE_4}}, {{LENS_4}}, {{SHOT_SIZE_4}}, {{FOREGROUND_4}}: {{BEAT_4}} {{DIALOGUE}}.
+[Shot 5] At 00:0X.000, the camera cuts to {{HEIGHT_ANGLE_5}}, {{LENS_5}}, {{SHOT_SIZE_5}}: {{BEAT_5}}.
+[Shot 6] At 00:0X.000, the camera cuts to {{HEIGHT_ANGLE_6}}, {{LENS_6}}, {{SHOT_SIZE_6}}, {{FOREGROUND_6}}: {{BEAT_6}}. The frame holds.
+
+PHYSIOLOGY PRIORITY: {{PHYSIOLOGY_ORDER}}
+LIGHT AND ATMOSPHERE: {{LIGHT}}
+CONSISTENCY LOCK: {{IDENTITY_LOCK}} {{STATE_LOCK}} {{HEADCOUNT_LOCK}}
+
+overall_soundscape: {{SOUND}}
+non_diegetic_music: N/A
+```
+
+**镜头表（先填这张，再写正文）**：
+
+| # | 高度/角度 | 景别/焦段 | 前景 | 发生什么 | 切因 |
+|---|---|---|---|---|---|
+| 1 |  |  |  |  |  |
+| 2 |  |  |  |  |  |
+| 3 |  |  |  |  |  |
+| 4 |  |  |  |  |  |
+| 5 |  |  |  |  |  |
+| 6 |  |  |  |  |  |
+
+**填法**：接触/反应场默认 5–7 镜；瞬间戏 3–4 镜也可以，但必须覆盖来向/接触/后果；每一刀有切因；单元内相邻两镜默认换两件（含高度/角度或轴线侧）；全单元至少一个非平视正面。表演按 `acting-performance.md`：接触反射弧、3–4 拍微表情链、听者/旁观者反应。
+
+---
+
 ## 骨架选择表
 
 | 场景 | 骨架 | 转折位置 |
@@ -248,3 +286,4 @@ non_diegetic_music: {{MUSIC}}
 | 愤怒 / 反转 / 争吵 | C 转向型 | 2.4–3.6s 肢体冲突 |
 | 没有姿势参考 | D 自建空间（套 A/B/C 的节拍） | 同对应弧型 |
 | 先验构图 | E 静帧版 | 无 |
+| 叙事 / 对话 / 接触 / 多人 | **G 叙事场（非 POV）** | 接触、台词、反应、余波 |

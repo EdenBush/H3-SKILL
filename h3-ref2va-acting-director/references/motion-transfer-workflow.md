@@ -101,7 +101,7 @@ subject_definitions:
 - `summary` 前缀任务类型标签：`[reference generation]`，然后一句话写"谁、做什么、来自哪个标签"
 - `retention_analysis`：目标外观 `fully_preserved`；动作 `attribute_transfer` 从参考表演者迁到目标；抄机位时才给 `<Video N>` 写 `fully_preserved`（`camera path` + `pacing`）
 - `detailed_description`：先风格句，再 `[Shot 1]` 且**不带时间戳**；**只说动作来自哪里，绝不重述舞步**；把增量写满——场景、机位政策、主体站位、声音
-- 篇幅：生成类任务 **350–500 英文词**
+- 篇幅：按动作事件与证据量写；写透可以很长，不按词数封顶
 - 语言：字段英文；台词 / 歌词 / 画面文字保留原语言，放 `<d>` 或引号内
 
 ---
