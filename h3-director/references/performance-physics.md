@@ -106,7 +106,7 @@ slides back across the floorboard.
 | 她推开了门 | 她的手掌抵在门板上，门开了一条缝，手臂在伸直 |
 | 他抽出了手臂 | 他的手肘弯到九十度，手腕还在她掌心里，肩膀已经扭开 |
 
-#### 规律四：一个动作 = 3–4 个身体部位协同
+#### 规律四：发力/挣扎动作，写 3–4 个身体部位协同
 
 `pull his arm away` 只有一个部位在动，所以画面里只有一条手臂动，看起来像静止。真实的"挣扎"是四件事同时发生：
 
@@ -114,7 +114,7 @@ slides back across the floorboard.
 left hand planted on the desk  +  torso pushed left  +  right shoulder taut  +  chin turned away
 ```
 
-**部位越多，"力"越明显。**
+**部位越多，"力"越明显。** 但这是**发力/挣扎**的量级，不是所有动作的配额：一个眼神、一个手指的小动作，1–2 个部位 + 一个反作用物就够；给每个小动作都凑四个部位，会让人像在抽搐。按动作强度定量。
 
 ### 三条公式
 
